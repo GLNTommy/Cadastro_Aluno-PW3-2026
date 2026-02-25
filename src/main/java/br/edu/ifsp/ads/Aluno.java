@@ -3,6 +3,7 @@ package br.edu.ifsp.ads;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Scanner;
 
 @Entity
 @Table(name = "Alunos")
@@ -27,4 +28,5 @@ public class Aluno {
         this.nota2 = nota2;
         this.nota3 = nota3;
     }
+
 }

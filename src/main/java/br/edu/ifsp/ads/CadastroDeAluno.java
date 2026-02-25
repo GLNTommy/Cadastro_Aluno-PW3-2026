@@ -32,6 +32,26 @@ public class CadastroDeAluno {
             switch(opcao){
                 case 1:
                     System.out.println("1 - Cadastrar aluno");
+
+                    System.out.println("\n Digite o nome: ");
+                    String nome = leitorTeclado.nextLine();
+
+                    System.out.println("\n Digite o RA: ");
+                    String ra = leitorTeclado.nextLine();
+
+                    System.out.println("\n Digite o Email: ");
+                    String email = leitorTeclado.nextLine();
+
+                    System.out.println("\n Digete a nota 1: ");
+                    BigDecimal nota1 = leitorTeclado.nextBigDecimal();
+
+                    System.out.println("\n Digete a nota 2: ");
+                    BigDecimal nota2 = leitorTeclado.nextBigDecimal();
+
+                    System.out.println("\n Digete a nota 3: ");
+                    BigDecimal nota3 = leitorTeclado.nextBigDecimal();
+
+                    Aluno aluno = new Aluno(nome, ra, email, nota1, nota2, nota3);
                     break;
                 case 2:
                     System.out.println("2 - Excluir aluno");
