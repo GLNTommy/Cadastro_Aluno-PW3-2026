@@ -12,6 +12,10 @@ public class CadastroDeAluno {
 
         Scanner leitorTeclado = new Scanner(System.in);
 
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("cadastroAluno");
+
+        EntityManager em = factory.createEntityManager();
+
         String menu = """
         ** CADASTRO DE ALUNOS **
 
@@ -26,6 +30,9 @@ public class CadastroDeAluno {
         Boolean sairMenu = true;
 
         while (sairMenu){
+
+            em.getTransaction().begin();
+
             System.out.println(menu);
             int opcao = leitorTeclado.nextInt();
 
@@ -66,6 +73,8 @@ public class CadastroDeAluno {
                     System.out.println("5 - Listar alunos (Status aprovação)");
                     break;
                 default:
+                    em.getTransaction().commit();
+                    em.close();
                     sairMenu = false;
                     break;
             }
