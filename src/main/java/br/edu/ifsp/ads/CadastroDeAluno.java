@@ -15,6 +15,7 @@ public class CadastroDeAluno {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("cadastroAluno");
 
         EntityManager em = factory.createEntityManager();
+        AlunoDAO alunoDAO = new AlunoDAO(em);
 
         String menu = """
         ** CADASTRO DE ALUNOS **
@@ -25,6 +26,8 @@ public class CadastroDeAluno {
         4 - Buscar aluno pelo nome
         5 - Listar alunos (Status aprovação)
         6 - FIM
+        
+        Escolha uma opcao: 
         """;
 
         Boolean sairMenu = true;
@@ -35,30 +38,38 @@ public class CadastroDeAluno {
 
             System.out.println(menu);
             int opcao = leitorTeclado.nextInt();
+            leitorTeclado.nextLine();
 
             switch(opcao){
                 case 1:
                     System.out.println("1 - Cadastrar aluno");
 
-                    System.out.println("\n Digite o nome: ");
+                    System.out.println("Digite o nome: ");
                     String nome = leitorTeclado.nextLine();
 
-                    System.out.println("\n Digite o RA: ");
+                    System.out.println("Digite o RA: ");
                     String ra = leitorTeclado.nextLine();
 
-                    System.out.println("\n Digite o Email: ");
+                    System.out.println("Digite o Email: ");
                     String email = leitorTeclado.nextLine();
 
-                    System.out.println("\n Digete a nota 1: ");
+                    System.out.println("\nATENCAO\n" +
+                            "UTILIZE VIRGULA PARA COLOCAR NOTAS QUEBRADAS, EXEMPLO: 5,2  8,7 .....\n");
+
+                    System.out.println("Digete a nota 1: ");
                     BigDecimal nota1 = leitorTeclado.nextBigDecimal();
 
-                    System.out.println("\n Digete a nota 2: ");
+                    System.out.println("Digete a nota 2: ");
                     BigDecimal nota2 = leitorTeclado.nextBigDecimal();
 
-                    System.out.println("\n Digete a nota 3: ");
+                    System.out.println("Digete a nota 3: ");
                     BigDecimal nota3 = leitorTeclado.nextBigDecimal();
 
                     Aluno aluno = new Aluno(nome, ra, email, nota1, nota2, nota3);
+                    alunoDAO.cadastrar(aluno);
+
+                    System.out.println("\n Aluno cadastrado!");
+                    em.getTransaction().commit();
                     break;
                 case 2:
                     System.out.println("2 - Excluir aluno");
