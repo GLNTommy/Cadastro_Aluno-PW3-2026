@@ -3,8 +3,12 @@ import jakarta.persistence.EntityManager;
 public class AlunoDAO {
     private EntityManager em;
 
-    public AlunoDAO(EntityManager em) {
+    public AlunoDAO(EntityManager em){
         this.em = em;
+    }
+
+    public void cadastrar(Aluno aluno){
+        this.em.persist(aluno);
     }
 
 }
