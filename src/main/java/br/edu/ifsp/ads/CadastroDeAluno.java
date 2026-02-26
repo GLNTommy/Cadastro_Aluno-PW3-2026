@@ -17,7 +17,9 @@ public class CadastroDeAluno {
 
 
 
-        String menu = """
+        String menu = """ 
+        
+        
         ** CADASTRO DE ALUNOS **
 
         1 - Cadastrar aluno
@@ -71,6 +73,7 @@ public class CadastroDeAluno {
                     em.getTransaction().commit();
                     System.out.println("\nAluno cadastrado!\n");
                     break;
+
                 case 2:
                     System.out.println("2 - Excluir aluno");
 
@@ -95,14 +98,42 @@ public class CadastroDeAluno {
 
 
                     break;
+
                 case 3:
                     System.out.println("3 - Alterar aluno");
                     em.getTransaction().commit();
 
                     break;
+
                 case 4:
                     System.out.println("4 - Buscar aluno pelo nome");
-                    em.getTransaction().commit();
+                    System.out.println("Digite o nome: ");
+                    String alunoPorNome = leitorTeclado.nextLine();
+
+                    try {
+                        Aluno alunoExibir = alunoDAO.buscarUnicoPorNome(alunoPorNome);
+                        System.out.println("\n\nNome: " + alunoExibir.getNome());
+                        System.out.println("Email: " + alunoExibir.getEmail());
+                        System.out.println("RA: " + alunoExibir.getRa());
+                        System.out.println("Notas: \n" +
+                                "Nota 1: " + alunoExibir.getNota1() +
+                                "\nNota 2: " + alunoExibir.getNota2() +
+                                "\nNota 3: " + alunoExibir.getNota3());
+
+                        em.getTransaction().commit();
+
+                    } catch (NoResultException e) {
+                        System.out.println("\n\nAluno nao encontrado pelo nome!\n\n");
+                        em.getTransaction().rollback();
+
+                    } catch (NonUniqueResultException e){
+                        System.out.println("\n\nMais de um aluno encontrado pelo mesmo nome!");
+                        System.out.println("Faça uma alteracao em um dos nomes: " + alunoPorNome + "\nPara prosseguir com a pesquisa\n\n");
+                        em.getTransaction().rollback();
+                    }
+
+
+
 
                     break;
                 case 5:
