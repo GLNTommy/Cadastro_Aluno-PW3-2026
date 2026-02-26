@@ -1,8 +1,6 @@
 package br.edu.ifsp.ads;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
@@ -16,6 +14,8 @@ public class CadastroDeAluno {
 
         EntityManager em = factory.createEntityManager();
         AlunoDAO alunoDAO = new AlunoDAO(em);
+
+
 
         String menu = """
         ** CADASTRO DE ALUNOS **
@@ -34,8 +34,8 @@ public class CadastroDeAluno {
 
         while (sairMenu){
 
-            em.getTransaction().begin();
 
+            em.getTransaction().begin();
             System.out.println(menu);
             int opcao = leitorTeclado.nextInt();
             leitorTeclado.nextLine();
@@ -68,23 +68,49 @@ public class CadastroDeAluno {
                     Aluno aluno = new Aluno(nome, ra, email, nota1, nota2, nota3);
                     alunoDAO.cadastrar(aluno);
 
-                    System.out.println("\n Aluno cadastrado!");
                     em.getTransaction().commit();
+                    System.out.println("\nAluno cadastrado!\n");
                     break;
                 case 2:
                     System.out.println("2 - Excluir aluno");
+
+                    System.out.println("Digite o nome: ");
+                    String nomeExcluirAluno = leitorTeclado.nextLine();
+
+                    try {
+                        Aluno alunoExcluir = alunoDAO.buscarUnicoPorNome(nomeExcluirAluno);
+                        alunoDAO.excluirAluno(alunoExcluir);
+                        em.getTransaction().commit();
+                        System.out.println("\nAluno excluido!\n");
+
+                    } catch (NoResultException e) {
+                        System.out.println("\n\nAluno nao encontrado pelo nome!\n\n");
+                        em.getTransaction().rollback();
+
+                    } catch (NonUniqueResultException e){
+                        System.out.println("\n\nMais de um aluno encontrado pelo mesmo nome!");
+                        System.out.println("Faça uma alteracao em um dos nomes: " + nomeExcluirAluno + "\nPara prosseguir com a exclusao\n\n");
+                        em.getTransaction().rollback();
+                    }
+
+
                     break;
                 case 3:
                     System.out.println("3 - Alterar aluno");
+                    em.getTransaction().commit();
+
                     break;
                 case 4:
                     System.out.println("4 - Buscar aluno pelo nome");
+                    em.getTransaction().commit();
+
                     break;
                 case 5:
                     System.out.println("5 - Listar alunos (Status aprovação)");
+                    em.getTransaction().commit();
+
                     break;
                 default:
-                    em.getTransaction().commit();
                     em.close();
                     sairMenu = false;
                     break;
