@@ -35,6 +35,7 @@ public class CadastroDeAluno {
 
         Boolean sairMenu = true;
 
+
         while (sairMenu){
 
 
@@ -45,7 +46,7 @@ public class CadastroDeAluno {
 
             switch(opcao){
                 case 1:
-                    System.out.println("1 - Cadastrar aluno");
+                    System.out.println("\n\n1 - Cadastrar aluno\n");
 
                     System.out.println("Digite o nome: ");
                     String nome = leitorTeclado.nextLine();
@@ -76,7 +77,7 @@ public class CadastroDeAluno {
                     break;
 
                 case 2:
-                    System.out.println("2 - Excluir aluno");
+                    System.out.println("\n\n2 - Excluir aluno\n");
 
                     System.out.println("Digite o nome: ");
                     String nomeExcluirAluno = leitorTeclado.nextLine();
@@ -93,7 +94,6 @@ public class CadastroDeAluno {
 
                     } catch (NonUniqueResultException e){
                         System.out.println("\n\nMais de um aluno encontrado pelo mesmo nome!");
-                        System.out.println("Faça uma alteracao em um dos nomes: " + nomeExcluirAluno + "\nPara prosseguir com a exclusao\n\n");
                         em.getTransaction().rollback();
                     }
 
@@ -101,13 +101,76 @@ public class CadastroDeAluno {
                     break;
 
                 case 3:
-                    System.out.println("3 - Alterar aluno");
-                    em.getTransaction().commit();
+                    System.out.println("\n\n3 - Alterar aluno\n");
+                    System.out.println("\nATENCAO\n" +
+                            "SE NAO QUISER ALTERAR UM CAMPO APENAS PRESSIONE ENTER PARA PASSAR PARA O PROXIMO CAMPO!\n");
+                    System.out.println("Digite o nome: ");
+                    String nomeAlunoAlterar = leitorTeclado.nextLine();
+
+                    try {
+                        Aluno alunoAlterar = alunoDAO.buscarUnicoPorNome(nomeAlunoAlterar);
+
+                        System.out.println("\n\nDigite o novo nome: ");
+                        String novoNome = leitorTeclado.nextLine();
+                        if (novoNome.isBlank()){
+                            novoNome = alunoAlterar.getNome();
+                        }
+                        alunoAlterar.setNome(novoNome);
+
+                        System.out.println("Digite o novo RA: ");
+                        String raAlterar = leitorTeclado.nextLine();
+                        if (raAlterar.isBlank()){
+                            raAlterar = alunoAlterar.getRa();
+                        }
+                        alunoAlterar.setRa(raAlterar);
+
+                        System.out.println("Digite o novo Email: ");
+                        String emailAlterar = leitorTeclado.nextLine();
+                        if (emailAlterar.isBlank()){
+                            emailAlterar = alunoAlterar.getEmail();
+                        }
+                        alunoAlterar.setEmail(emailAlterar);
+
+
+                        BigDecimal nota1Alterar = lerBigdecimal(leitorTeclado, "Digite a nova nota 1: ", alunoAlterar.getNota1());
+                        alunoAlterar.setNota1(nota1Alterar);
+
+
+                        BigDecimal nota2Alterar = lerBigdecimal(leitorTeclado, "Digite a nova nota 2: ", alunoAlterar.getNota2());
+                        alunoAlterar.setNota2(nota2Alterar);
+
+
+                        BigDecimal nota3Alterar = lerBigdecimal(leitorTeclado, "Digite a nova nota 3: ", alunoAlterar.getNota3());
+                        alunoAlterar.setNota3(nota3Alterar);
+
+
+                        em.getTransaction().commit();
+                        System.out.println("\nAluno alterado!\n");
+                        System.out.println("------------------------------------------------------");
+                        System.out.println("Novo nome: " + alunoAlterar.getNome());
+                        System.out.println("Novo RA: " + alunoAlterar.getRa());
+                        System.out.println("Novo email: " + alunoAlterar.getEmail());
+                        System.out.println("Nova nota 1: " + alunoAlterar.getNota1());
+                        System.out.println("Nova nota 2: " + alunoAlterar.getNota2());
+                        System.out.println("Nova nota 3: " + alunoAlterar.getNota3());
+                        System.out.println("------------------------------------------------------");
+
+
+                    } catch (NoResultException e) {
+                        System.out.println("\n\nAluno nao encontrado pelo nome!\n\n");
+                        em.getTransaction().rollback();
+
+                    } catch (NonUniqueResultException e){
+                        System.out.println("\n\nMais de um aluno encontrado pelo mesmo nome!");
+                        em.getTransaction().rollback();
+                    }
+
+
 
                     break;
 
                 case 4:
-                    System.out.println("4 - Buscar aluno pelo nome");
+                    System.out.println("\n\n4 - Buscar aluno pelo nome\n");
                     System.out.println("Digite o nome: ");
                     String alunoPorNome = leitorTeclado.nextLine();
 
@@ -129,14 +192,13 @@ public class CadastroDeAluno {
 
                     } catch (NonUniqueResultException e){
                         System.out.println("\n\nMais de um aluno encontrado pelo mesmo nome!");
-                        System.out.println("Faça uma alteracao em um dos nomes: " + alunoPorNome + "\nPara prosseguir com a pesquisa\n\n");
                         em.getTransaction().rollback();
                     }
 
                     break;
                 case 5:
                     List<Aluno> alunos = alunoDAO.listarAlunos();
-                    System.out.println("\n\nExibindo todos os alunos:\n");
+                    System.out.println("\n\n5 - Exibindo todos os alunos:\n");
                     for ( Aluno alunoListado : alunos ){
                         System.out.println("Nome: " + alunoListado.getNome());
                         System.out.println("Email: " + alunoListado.getEmail());
@@ -167,6 +229,18 @@ public class CadastroDeAluno {
                     break;
             }
         }
+    }
 
+    public static BigDecimal lerBigdecimal(Scanner scanner, String mensagem, BigDecimal nota){
+        System.out.println(mensagem);
+        String novaNota = scanner.nextLine().trim();
+        if (!novaNota.isBlank()){
+            try {
+                return new BigDecimal(novaNota.replace(',', '.'));
+            }catch (NumberFormatException e){
+                System.out.println("Numero invalido");
+            }
+        }
+        return nota;
     }
 }
