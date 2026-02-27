@@ -6,6 +6,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
+
+// João Vinícius Gonçalves dos Santos  SC3018814
+// Thomas Caio dos Santos              SC302086X
 public class CadastroDeAluno {
     public static void main(String[] args) {
 
