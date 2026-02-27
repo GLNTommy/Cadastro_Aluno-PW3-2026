@@ -3,6 +3,7 @@ package br.edu.ifsp.ads;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class CadastroDeAluno {
@@ -132,12 +133,31 @@ public class CadastroDeAluno {
                         em.getTransaction().rollback();
                     }
 
-
-
-
                     break;
                 case 5:
-                    System.out.println("5 - Listar alunos (Status aprovação)");
+                    List<Aluno> alunos = alunoDAO.listarAlunos();
+                    System.out.println("\n\nExibindo todos os alunos:\n");
+                    for ( Aluno alunoListado : alunos ){
+                        System.out.println("Nome: " + alunoListado.getNome());
+                        System.out.println("Email: " + alunoListado.getEmail());
+                        System.out.println("Ra: " + alunoListado.getRa());
+                        System.out.println("Notas: \n" +
+                                "Nota 1: " + alunoListado.getNota1() +
+                                "\nNota 2: " + alunoListado.getNota2() +
+                                "\nNota 3: " + alunoListado.getNota3());
+
+                        BigDecimal media = alunoListado.getNota1().add(alunoListado.getNota2().add(alunoListado.getNota3())).divide(new BigDecimal("3"), 2, 2);
+                        System.out.println("Media: " + media);
+
+                        if(media.compareTo(new BigDecimal("4")) < 0){
+                            System.out.println("Situação: Reprovado\n");
+                        }else if(media.compareTo(new BigDecimal("6")) >= 0){
+                            System.out.println("Situação: Aprovado\n");
+                        }else{
+                            System.out.println("Situação: Recuperação\n");
+                        }
+                    }
+
                     em.getTransaction().commit();
 
                     break;
