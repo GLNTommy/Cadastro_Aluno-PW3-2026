@@ -3,6 +3,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.NonUniqueResultException;
 
+import java.util.List;
+
 public class AlunoDAO {
     private EntityManager em;
 
@@ -24,6 +26,10 @@ public class AlunoDAO {
         em.remove(aluno);
     }
 
-
+    public List<Aluno> listarAlunos(){
+        String jpql = "SELECT a FROM Aluno a";
+        return em.createQuery(jpql, Aluno.class)
+                .getResultList();
+    }
 
 }
